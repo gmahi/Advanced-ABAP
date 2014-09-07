@@ -1,0 +1,15 @@
+*&---------------------------------------------------------------------*
+*& Module Pool       ZGULLA_DYNPRO1
+*&
+*&---------------------------------------------------------------------*
+*&
+*&
+*&---------------------------------------------------------------------*
+
+
+INCLUDE ZGULLA_DYNPRO1_TOP                      .    " global Data
+
+* INCLUDE ZGULLA_DYNPRO1_O01                      .  " PBO-Modules
+* INCLUDE ZGULLA_DYNPRO1_I01                      .  " PAI-Modules
+* INCLUDE ZGULLA_DYNPRO1_F01                      .  " FORM-Routines
+

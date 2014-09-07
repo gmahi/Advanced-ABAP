@@ -1,0 +1,95 @@
+*&---------------------------------------------------------------------*
+*& Report  ZGULLA_REPORT2
+*&
+*&---------------------------------------------------------------------*
+*&
+*&
+*&---------------------------------------------------------------------*
+
+REPORT ZGULLA_REPORT2.
+
+DATA : IT_FLIGHT TYPE TABLE OF SPFLI,
+      WA_FLIGHT TYPE SPFLI.
+
+DATA : IT_MATERIAL TYPE TABLE OF MARA,
+       WA_MATERIAL TYPE MARA.
+
+selection-screen : begin of block b1 with frame title text-001.
+parameters : p_carrid type spfli-carrid.
+parameters : p_matnr type mara-matnr.
+selection-screen : end  of block b1.
+
+selection-screen : begin of block b2 with frame title text-002.
+PARAMETERS : R1  RADIOBUTTON GROUP G1 DEFAULT 'X' USER-COMMAND SS.
+PARAMETERS : R2  RADIOBUTTON GROUP G1 .
+selection-screen : end  of block b2.
+
+AT SELECTION-SCREEN OUTPUT. " DYNAMIC MODIFICATION OF SCREEN
+
+  IF R1 = 'X'.
+    LOOP AT SCREEN.
+      IF SCREEN-NAME = 'P_MATNR' OR SCREEN-NAME = '%_P_MATNR_%_APP_%-TEXT'.
+        SCREEN-ACTIVE = 0.
+        SCREEN-INVISIBLE = 1.
+        MODIFY SCREEN.
+      ENDIF.
+    ENDLOOP.
+
+  ELSEIF R2 = 'X'.
+    LOOP AT SCREEN.
+      IF SCREEN-NAME = 'P_CARRID' OR SCREEN-NAME = '%_P_CARRID_%_APP_%-TEXT'.
+        SCREEN-ACTIVE = 0.
+        SCREEN-INVISIBLE = 1.
+        MODIFY SCREEN.
+      ENDIF.
+    ENDLOOP.
+  ENDIF.
+
+INITIALIZATION.
+  P_CARRID = 'AB'.
+  P_MATNR = '00000010'.
+
+START-OF-SELECTION.
+  IF R1 = 'X'.
+    SELECT * FROM SPFLI INTO TABLE IT_FLIGHT UP TO 20 ROWS.
+  ELSEIF R2 = 'X'.
+    SELECT * FROM MARA INTO TABLE IT_MATERIAL UP TO 20 ROWS.
+  ENDIF.
+
+END-OF-SELECTION.
+
+  IF R1 = 'X'.
+    LOOP AT IT_FLIGHT INTO WA_FLIGHT.
+      WRITE :/ WA_FLIGHT-CARRID,
+               WA_FLIGHT-CONNID,
+               WA_FLIGHT-COUNTRYFR,
+               WA_FLIGHT-COUNTRYTO,
+               WA_FLIGHT-AIRPFROM,
+               WA_FLIGHT-AIRPTO,
+               WA_FLIGHT-CITYFROM,
+               WA_FLIGHT-CITYTO,
+               WA_FLIGHT-DISTANCE.
+
+    ENDLOOP.
+  ELSEIF R2 = 'X'.
+    LOOP AT IT_MATERIAL INTO WA_MATERIAL.
+      WRITE :/ WA_MATERIAL-MATNR,
+               WA_MATERIAL-ERSDA,
+               WA_MATERIAL-ERNAM,
+               WA_MATERIAL-AENAM.
+
+    ENDLOOP.
+  ENDIF.
+
+TOP-OF-PAGE.
+  IF R1 = 'X'.
+    WRITE :/50 'INDIAN AIRLINE DETAILD OF FLIGHT'.
+    ULINE.
+  ELSEIF R2 = 'X'.
+    WRITE :/50 'DETAILS OF MATERIALS'.
+    ULINE.
+  ENDIF.
+
+END-OF-PAGE.
+  WRITE :/50 'THANKS FOR SHOWING INTEREST'.
+  ULINE.
